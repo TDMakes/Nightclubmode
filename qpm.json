@@ -1,0 +1,38 @@
+{
+  "info": {
+    "name": "NightClubMode",
+    "id": "NightClubMode",
+    "version": "1.0.0",
+    "url": null,
+    "additionalData": {
+      "modFiles": ["libNightClubMode.so"],
+      "overrideSoName": "libNightClubMode.so"
+    }
+  },
+  "workspace": {
+    "scripts": {
+      "build": "pwsh -Command .\\build.ps1",
+      "buildRelease": "pwsh -Command .\\build.ps1 --release",
+      "package": "pwsh -Command .\\package.ps1"
+    },
+    "extraFiles": ["mod.json"],
+    "packagePath": "extern"
+  },
+  "dependencies": [
+    {
+      "id": "paper",
+      "versionRange": ">=0.1.0",
+      "additionalData": {}
+    },
+    {
+      "id": "codegen",
+      "versionRange": ">=0.24.0",
+      "additionalData": {}
+    },
+    {
+      "id": "beatsaber-hook",
+      "versionRange": ">=3.8.0",
+      "additionalData": {}
+    }
+  ]
+}

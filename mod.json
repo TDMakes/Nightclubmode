@@ -1,0 +1,24 @@
+{
+  "id": "NightClubMode",
+  "name": "NightClub Mode",
+  "version": "1.0.0",
+  "description": "Turns Beat Saber into a nightclub — sabers pulse through rainbow colors on the beat, lights strobe on misses, and the whole environment reacts to your combo!",
+  "author": "YourNameHere",
+  "packageId": "com.beatgames.beatsaber",
+  "packageVersion": "1.40.8",
+  "modFiles": ["libNightClubMode.so"],
+  "lateModFiles": [],
+  "libraryFiles": [],
+  "dependencies": [
+    {
+      "id": "paper",
+      "versionRange": ">=0.1.0",
+      "downloadIfMissing": "https://github.com/sc2ad/paper/releases/download/v0.1.0/paper.qmod"
+    },
+    {
+      "id": "codegen",
+      "versionRange": ">=0.24.0",
+      "downloadIfMissing": "https://github.com/sc2ad/BeatSaber-Quest-Codegen/releases/download/v0.24.0/codegen.qmod"
+    }
+  ]
+}
