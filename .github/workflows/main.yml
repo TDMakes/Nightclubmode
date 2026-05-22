@@ -79,23 +79,7 @@ jobs:
         with:
           name: NightClubMode-1.0.0
           path: NightClubMode-1.0.0.qmod
-          retention-days: 30
-
-      # ── 10. Auto-create a GitHub Release on version tags ──────────────────
-      #  Push a tag like "v1.0.0" and it will publish a real Release with
-      #  the .qmod attached — great for sharing with others via BMBF links.
-      - name: Create GitHub Release
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@v2
-        with:
-          files: NightClubMode-1.0.0.qmod
-          generate_release_notes: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-../NightClubMode-1.0.0.qmod .
-          cd ..
-          echo "✅ Package contents:"
-          unzip -l NightClubMode-1.0.0.qmod
+          retention-days: 
 
       # ── 9. Upload .qmod as a downloadable artifact ─────────────────────────
-      - name: Uploa
+      - name: Upload
