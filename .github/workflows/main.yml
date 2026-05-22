@@ -1,0 +1,101 @@
+name: Build NightClub Mode
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'src/**'
+      - 'include/**'
+      - 'CMakeLists.txt'
+      - 'mod.json'
+      - 'qpm.json'
+  pull_request:
+    branches: [main, master]
+  # Lets you trigger a build manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. Check out your code ─────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 2. Install NDK 25 (the version qpm mods target) ───────────────────
+      - name: Set up Android NDK r25c
+        id: setup-ndk
+        uses: nttld/setup-ndk@v1
+        with:
+          ndk-version: r25c
+          add-to-path: true
+
+      # ── 3. Install Ninja (CMake generator) ────────────────────────────────
+      - name: Install Ninja
+        run: sudo apt-get install -y ninja-build
+
+      # ── 4. Install qpm (Quest Package Manager) ────────────────────────────
+      - name: Install qpm
+        run: |
+          curl -sL https://github.com/sc2ad/QuestPackageManager-Rust/releases/latest/download/qpm-rust-ubuntu-latest -o qpm
+          chmod +x qpm
+          sudo mv qpm /usr/local/bin/qpm
+          qpm --version
+
+      # ── 5. Restore dependencies (downloads headers into ./extern) ─────────
+      - name: Restore qpm dependencies
+        run: qpm restore
+
+      # ── 6. Configure CMake ─────────────────────────────────────────────────
+      - name: Configure CMake
+        run: |
+          cmake -B build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_TOOLCHAIN_FILE=${{ steps.setup-ndk.outputs.ndk-path }}/build/cmake/android.toolchain.cmake \
+            -DANDROID_ABI=arm64-v8a \
+            -DANDROID_PLATFORM=android-29 \
+            -G Ninja
+
+      # ── 7. Compile ─────────────────────────────────────────────────────────
+      - name: Build
+        run: cmake --build build --config Release
+
+      # ── 8. Package into .qmod (zip with mod.json + .so) ───────────────────
+      - name: Package .qmod
+        run: |
+          mkdir -p package
+          cp mod.json package/mod.json
+          cp build/libNightClubMode.so package/libNightClubMode.so
+          cd package
+          zip -r ../NightClubMode-1.0.0.qmod .
+          cd ..
+          echo "✅ Package contents:"
+          unzip -l NightClubMode-1.0.0.qmod
+
+      # ── 9. Upload .qmod as a downloadable artifact ─────────────────────────
+      - name: Upload .qmod artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: NightClubMode-1.0.0
+          path: NightClubMode-1.0.0.qmod
+          retention-days: 30
+
+      # ── 10. Auto-create a GitHub Release on version tags ──────────────────
+      #  Push a tag like "v1.0.0" and it will publish a real Release with
+      #  the .qmod attached — great for sharing with others via BMBF links.
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: NightClubMode-1.0.0.qmod
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+../NightClubMode-1.0.0.qmod .
+          cd ..
+          echo "✅ Package contents:"
+          unzip -l NightClubMode-1.0.0.qmod
+
+      # ── 9. Upload .qmod as a downloadable artifact ─────────────────────────
+      - name: Uploa
