@@ -79,7 +79,4 @@ jobs:
         with:
           name: NightClubMode-1.0.0
           path: NightClubMode-1.0.0.qmod
-          retention-days: 
-
-      # ── 9. Upload .qmod as a downloadable artifact ─────────────────────────
-      - name: Upload
+          retention-days: 30
